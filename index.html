@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Sarayu Moganti — Brand Strategy &amp; Design</title>
+<title>Sarayu — Brand Strategy &amp; Design</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
 <style>
@@ -103,22 +103,6 @@
     background:linear-gradient(90deg, var(--accent), var(--accent-2));
     transition:width .08s linear;
   }
-
-  /* nav */
-  .nav{
-    position:fixed; top:0; left:0; right:0; z-index:200;
-    padding:26px 40px; display:flex; justify-content:space-between; align-items:center;
-    mix-blend-mode:difference;
-  }
-  .nav-mark{ font-weight:800; font-size:1rem; }
-  .nav-links{ display:flex; gap:34px; font-size:0.72rem; }
-  .nav-links a{ position:relative; padding-bottom:3px; }
-  .nav-links a::after{
-    content:""; position:absolute; left:0; bottom:0; height:1px; width:0; background:var(--fg);
-    transition:width .35s ease;
-  }
-  .nav-links a:hover::after{ width:100%; }
-  @media (max-width:760px){ .nav-links{ display:none; } }
 
   /* side nav */
   .side-nav{
@@ -254,11 +238,17 @@
   @keyframes marquee{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
 
   /* sections generic */
-  section{ position:relative; scroll-margin-top:88px; }
+  section{ position:relative; scroll-margin-top:32px; }
   .footer{ scroll-margin-top:0; }
   .sec{ padding:130px 0; }
   .sec-tight{ padding:70px 0; }
-  .kicker{ font-size:0.72rem; color:var(--accent); margin-bottom:20px; }
+  .kicker{ font-size:0.72rem; color:var(--accent); margin-bottom:20px; position:relative; display:inline-block; padding-left:22px; }
+  .kicker::before{
+    content:""; position:absolute; left:0; top:50%; width:14px; height:1px;
+    background:linear-gradient(90deg, transparent, var(--accent)); transform:translateY(-50%) scaleX(0); transform-origin:left;
+    transition:transform .6s cubic-bezier(.2,.8,.2,1);
+  }
+  .kicker.reveal.in::before{ transform:translateY(-50%) scaleX(1); }
   .reveal{ opacity:0; transform:translateY(30px); transition:opacity .8s ease, transform .8s ease; }
   .reveal.in{ opacity:1; transform:translateY(0); }
   .reveal-left{ opacity:0; transform:translateX(-44px); transition:opacity .85s cubic-bezier(.2,.8,.2,1), transform .85s cubic-bezier(.2,.8,.2,1); }
@@ -294,8 +284,22 @@
   @media (max-width:520px){ .flourish{ display:none; } }
 
   /* intro statement */
-  .intro-line{ font-size:clamp(1.6rem,4.6vw,3.1rem); font-weight:500; line-height:1.32; max-width:1080px; }
-  .intro-line .accent-word{ color:var(--accent); font-style:italic; }
+  .intro-line{ font-size:clamp(1.6rem,4.6vw,3.1rem); font-weight:500; line-height:1.38; letter-spacing:-0.01em; max-width:1080px; }
+  .intro-line .accent-word{ font-style:italic; font-weight:600; }
+  .intro-line .accent-word .word span{
+    background:linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent));
+    background-size:220% auto; background-position:0% center;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:shine 7s linear infinite;
+  }
+  @keyframes shine{ to{ background-position:-220% center; } }
+  .word-reveal .word{ overflow:hidden; display:inline-block; vertical-align:top; }
+  .word-reveal .word span{
+    display:inline-block; transform:translateY(115%) rotate(4deg); opacity:0;
+    transition:transform .7s cubic-bezier(.2,.8,.2,1), opacity .5s ease;
+    transition-delay:calc(var(--i,0) * 28ms);
+  }
+  .word-reveal.in .word span{ transform:translateY(0) rotate(0); opacity:1; }
   .intro-meta{ margin-top:56px; display:grid; grid-template-columns:repeat(4,1fr); gap:24px; border-top:1px solid var(--line); padding-top:28px; }
   .intro-meta .k{ font-size:0.65rem; color:var(--fg-dim); margin-bottom:8px; }
   .intro-meta .v{ font-size:0.92rem; }
@@ -350,8 +354,10 @@
   /* case studies */
   .case{
     display:grid; grid-template-columns:0.4fr 1fr; gap:60px; padding:56px 0; border-top:1px solid var(--line);
-    align-items:start;
+    align-items:start; transition:transform .5s cubic-bezier(.2,.8,.2,1), border-color .5s ease;
+    will-change:transform;
   }
+  .case:hover{ transform:translateY(-6px); border-top-color:var(--accent); }
   .case:last-child{ border-bottom:1px solid var(--line); }
   .case-num{ font-size:0.72rem; color:var(--accent); }
   .case-co{ font-size:clamp(1.6rem,3vw,2.2rem); font-weight:600; margin-top:14px; }
@@ -369,15 +375,24 @@
   .lead-stat .n{ font-size:clamp(3.4rem,7vw,5.5rem); font-weight:800; color:var(--accent); line-height:1; }
   .lead-stat .l{ font-size:0.68rem; color:var(--fg-dim); margin-top:10px; }
   .lead-beats{ margin-top:56px; display:grid; grid-template-columns:repeat(3,1fr); gap:30px; }
-  .beat{ border-top:1px solid var(--line); padding-top:18px; }
+  .beat{ border-top:1px solid var(--line); padding-top:18px; transition:transform .45s cubic-bezier(.2,.8,.2,1), border-color .45s ease; }
+  .beat:hover{ transform:translateY(-5px); border-top-color:var(--accent-2); }
   .beat .k{ font-size:0.66rem; color:var(--accent-2); margin-bottom:10px; }
   .beat p{ font-size:0.92rem; color:rgba(244,241,233,0.8); line-height:1.6; }
   .lead-tags{ margin-top:44px; display:flex; gap:12px; flex-wrap:wrap; }
-  .tag{ font-size:0.65rem; padding:9px 14px; border:1px solid var(--line); border-radius:100px; color:var(--fg-dim); }
+  .tag{
+    font-size:0.65rem; padding:9px 14px; border:1px solid var(--line); border-radius:100px; color:var(--fg-dim);
+    transition:border-color .3s ease, color .3s ease, transform .3s ease, box-shadow .3s ease;
+  }
+  .tag:hover{ border-color:var(--accent); color:var(--fg); transform:translateY(-3px); box-shadow:0 8px 20px -8px rgba(201,162,76,0.6); }
   @media (max-width:860px){ .lead-wrap{ grid-template-columns:1fr;} .lead-stat{ text-align:left;} .lead-beats{ grid-template-columns:1fr;} }
 
   /* education */
-  .edu-row{ display:grid; grid-template-columns:150px 1fr 160px; gap:20px; padding:24px 0; border-top:1px solid var(--line); align-items:baseline; }
+  .edu-row{
+    display:grid; grid-template-columns:150px 1fr 160px; gap:20px; padding:24px 0; border-top:1px solid var(--line); align-items:baseline;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1), padding-left .4s cubic-bezier(.2,.8,.2,1);
+  }
+  .edu-row:hover{ transform:translateX(6px); padding-left:10px; }
   .edu-list{ border-bottom:1px solid var(--line); }
   .edu-row .yr{ font-size:0.7rem; color:var(--accent); }
   .edu-row h4{ font-size:1.1rem; font-weight:600; }
@@ -408,6 +423,9 @@
     .grain{ animation:none; }
     #spotlight{ display:none; }
     .hero-bg, .hero-inner{ transition:none !important; transform:none !important; }
+    .word-reveal .word span{ opacity:1; transform:none; transition:none; }
+    .intro-line .accent-word .word span{ animation:none; }
+    .case, .beat, .tag, .edu-row{ transition:none !important; }
   }
 </style>
 </head>
@@ -421,18 +439,8 @@
 <div id="cursor-label"></div>
 
 <div id="loader">
-  <div class="loader-sig" id="loaderSig">Sarayu Moganti</div>
+  <div class="loader-sig" id="loaderSig">Sarayu</div>
 </div>
-
-<nav class="nav">
-  <div class="nav-mark mono">SM</div>
-  <div class="nav-links mono">
-    <a href="#studies">Work</a>
-    <a href="#leadership">Leadership</a>
-    <a href="#work">Craft</a>
-    <a href="#contact">Contact</a>
-  </div>
-</nav>
 
 <nav class="side-nav" id="sideNav">
   <div class="side-nav-inner">
@@ -456,7 +464,7 @@
     <img data-ref="src-kathakali" alt="">
   </div>
   <div class="hero-inner">
-    <div class="hero-eyebrow mono">Sarayu Moganti — Brand Strategy &amp; Design, Hyderabad</div>
+    <div class="hero-eyebrow mono">Sarayu — Brand Strategy &amp; Design, Hyderabad</div>
     <h1 class="hero-title long">
       <span class="line"><span><em>Endlessly curious</em> — exploring</span></span>
       <span class="line"><span>the intersection of strategy, design,</span></span>
@@ -503,7 +511,7 @@
     </svg>
   </div>
     <div class="kicker mono reveal">01 — About</div>
-    <p class="intro-line reveal">I believe the best ideas happen where <span class="accent-word">creativity meets strategy</span>. As a Business Management &amp; Technology student, I'm passionate about branding, marketing, design, and building experiences that people genuinely connect with. I'm constantly learning, experimenting, and pushing myself to create work that is both purposeful and impactful.</p>
+    <p class="intro-line word-reveal" id="aboutText"><span class="accent-word">Creativity</span> has always been at the heart of everything I do. From sketchbooks to brand ideas, I've always loved transforming concepts into meaningful experiences. As a student, I'm constantly learning, exploring, and growing through every project I take on.</p>
     <div class="intro-meta reveal">
       <div><div class="k mono">Studying</div><div class="v">Business Mgmt &amp; Technology, Tetr College of Business</div></div>
       <div><div class="k mono">Internships</div><div class="v">Marketing · Design Thinking</div></div>
@@ -667,7 +675,7 @@
       </div>
     </div>
     <div class="footer-bottom mono">
-      <div>© 2026 Sarayu Moganti</div>
+      <div>© 2026 Sarayu</div>
       <div>Hyderabad, India</div>
     </div>
   </div>
@@ -851,11 +859,36 @@
     bgImgs[bgIdx].classList.add('active');
   }, 4200);
 
+  /* ---------- word-by-word text reveal ---------- */
+  function wrapWords(node){
+    node.childNodes.forEach(child=>{
+      if(child.nodeType === Node.TEXT_NODE){
+        const frag = document.createDocumentFragment();
+        child.textContent.split(/(\s+)/).forEach(chunk=>{
+          if(chunk.trim() === ''){ frag.appendChild(document.createTextNode(chunk)); return; }
+          const outer = document.createElement('span');
+          outer.className = 'word';
+          const inner = document.createElement('span');
+          inner.textContent = chunk;
+          outer.appendChild(inner);
+          frag.appendChild(outer);
+        });
+        child.replaceWith(frag);
+      } else if(child.nodeType === Node.ELEMENT_NODE){
+        wrapWords(child);
+      }
+    });
+  }
+  document.querySelectorAll('.word-reveal').forEach(el=>{
+    wrapWords(el);
+    el.querySelectorAll('.word').forEach((w,i)=>{ w.style.setProperty('--i', i); });
+  });
+
   /* ---------- scroll reveal ---------- */
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, {threshold:0.12});
-  document.querySelectorAll('.reveal, .reveal-flourish, .reveal-left, .reveal-right, .reveal-scale, .reveal-up').forEach(el=>io.observe(el));
+  document.querySelectorAll('.reveal, .reveal-flourish, .reveal-left, .reveal-right, .reveal-scale, .reveal-up, .word-reveal').forEach(el=>io.observe(el));
 
   /* ---------- gallery: continuous scroll-scrubbed blur-to-focus reveal ---------- */
   const scrubItems = Array.from(document.querySelectorAll('.g-item'));
@@ -929,7 +962,7 @@
   const trackFill = document.getElementById('sideTrackFill');
 
   function smoothScrollTo(target){
-    const offset = 88;
+    const offset = 32;
     const startY = window.pageYOffset;
     const targetY = target.getBoundingClientRect().top + startY - offset;
     const distance = targetY - startY;
